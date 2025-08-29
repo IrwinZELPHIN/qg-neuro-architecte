@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QG Neuro-Architecte™ - Dashboard</title>
+    <style>
+        :root {
+            --bg-primary: #0b0b0c;
+            --bg-secondary: #121214;
+            --bg-tertiary: #1f1f22;
+            --border-color: #2a2a2e;
+            --text-primary: #eee;
+            --text-secondary: #999;
+            --accent-red: #ff3b30;
+            --accent-orange: #ff9500;
+            --accent-green: #34c759;
+            --accent-blue: #007aff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-red);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 18px;
+        }
+
+        .title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-red);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .logout-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: var(--bg-tertiary);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Login Form */
+        .login-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-input {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        .btn {
+            background: var(--accent-red);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .controls {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-input, .filter-select {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-critique { background: var(--accent-red); }
+        .status-surveiller { background: var(--accent-orange); }
+        .status-stable { background: var(--accent-green); }
+
+        /* Operators Grid */
+        .operators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .operator-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .operator-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .operator-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .operator-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-badge.critique {
+            background: rgba(255, 59, 48, 0.2);
+            color: var(--accent-red);
+            border: 1px solid var(--accent-red);
+        }
+
+        .status-badge.surveiller {
+            background: rgba(255, 149, 0, 0.2);
+            color: var(--accent-orange);
+            border: 1px solid var(--accent-orange);
+        }
+
+        .status-badge.stable {
+            background: rgba(52, 199, 89, 0.2);
+            color: var(--accent-green);
+            border: 1px solid var(--accent-green);
+        }
+
+        .operator-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Desktop Table (hidden on mobile) */
+        .operators-table {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table th {
+            background: var(--bg-tertiary);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .table td {
+            color: var(--text-secondary);
+        }
+
+        /* Responsive Design */
+        @media (min-width: 768px) {
+            .header-content {
+                flex-wrap: nowrap;
+            }
+
+            .operators-table {
+                display: block;
+            }
+
+            .operators-grid {
+                display: none;
+            }
+
+            .controls-grid {
+                grid-template-columns: 2fr 1fr auto;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header {
+                padding: 0.75rem;
+            }
+
+            .title {
+                font-size: 1.2rem;
+            }
+
+            .user-info {
+                font-size: 0.8rem;
+            }
+
+            .operators-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                justify-content: center;
+            }
+        }
+
+        /* Loading and Error States */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .error {
+            background: rgba(255, 59, 48, 0.1);
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .success {
+            background: rgba(52, 199, 89, 0.1);
+            border: 1px solid var(--accent-green);
+            color: var(--accent-green);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">IZ</div>
+                <h1 class="title">QG Neuro-Architecte™</h1>
+            </div>
+            <div class="user-info" id="userInfo" style="display: none;">
+                <span id="userName"></span>
+                <button class="logout-btn" onclick="logout()">🚪 Déconnexion</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Login Section -->
+        <div id="loginSection" class="login-card">
+            <h2 style="margin-bottom: 1.5rem; color: var(--accent-red);">Portail Neuro-Architecte</h2>
+            <form class="login-form" onsubmit="login(event)">
+                <div class="form-group">
+                    <input type="email" id="email" class="form-input" placeholder="Email" value="izelphin@gmail.com" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" class="form-input" placeholder="Mot de passe" value="password123" required>
+                </div>
+                <button type="submit" class="btn">Se connecter</button>
+                <a href="#" style="color: var(--accent-blue); text-decoration: none; font-size: 0.9rem;">Mot de passe oublié ?</a>
+            </form>
+            <div id="loginMessage"></div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboardSection" class="dashboard">
+            <!-- Controls -->
+            <div class="controls">
+                <div class="controls-grid">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Rechercher (nom, email, neurotype...)" onkeyup="filterOperators()">
+                    <select id="statusFilter" class="filter-select" onchange="filterOperators()">
+                        <option value="">Tous les statuts</option>
+                        <option value="Critique">Critique</option>
+                        <option value="À Surveiller">À Surveiller</option>
+                        <option value="Stable">Stable</option>
+                    </select>
+                    <button class="btn btn-secondary" onclick="loadOperators()">🔄 Actualiser</button>
+                </div>
+                <div class="stats" id="statsContainer">
+                    <!-- Stats will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Mobile Cards View -->
+            <div class="operators-grid" id="operatorsGrid">
+                <!-- Cards will be populated by JavaScript -->
+            </div>
+
+            <!-- Desktop Table View -->
+            <div class="operators-table">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Statut</th>
+                            <th>Nom</th>
+                            <th>Email</th>
+                            <th>Neurotype</th>
+                            <th>Dernier Scan</th>
+                            <th>Stress</th>
+                            <th>Performance</th>
+                        </tr>
+                    </thead>
+                    <tbody id="operatorsTableBody">
+                        <!-- Rows will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="loadingMessage" class="loading hidden">Chargement des données...</div>
+        </div>
+    </div>
+
+    <script>
+        // API Helper
+        const api = async (endpoint, options = {}) => {
+            const config = {
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                ...options
+            };
+
+            try {
+                const response = await fetch(`/api${endpoint}`, config);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || `HTTP ${response.status}`);
+                }
+                
+                return data;
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            }
+        };
+
+        // Authentication
+        async function login(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const messageEl = document.getElementById('loginMessage');
+
+            try {
+                await api('/auth/login', {
+                    method: 'POST',
+                    body: JSON.stringify({ email, password })
+                });
+
+                messageEl.innerHTML = '<div class="success">Connexion réussie !</div>';
+                
+                setTimeout(() => {
+                    showDashboard();
+                    loadOperators();
+                }, 1000);
+
+            } catch (error) {
+                messageEl.innerHTML = `<div class="error">Erreur: ${error.message}</div>`;
+            }
+        }
+
+        async function logout() {
+            try {
+                await api('/auth/logout', { method: 'POST' });
+                showLogin();
+            } catch (error) {
+                console.error('Logout error:', error);
+                showLogin(); // Force logout even if API fails
+            }
+        }
+
+        // UI State Management
+        function showLogin() {
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('dashboardSection').classList.remove('active');
+            document.getElementById('userInfo').style.display = 'none';
+            document.getElementById('loginMessage').innerHTML = '';
+        }
+
+        function showDashboard() {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('dashboardSection').classList.add('active');
+            document.getElementById('userInfo').style.display = 'flex';
+            document.getElementById('userName').textContent = 'Irwin Zelphin - Coach Principal';
+        }
+
+        // Operators Management
+        let allOperators = [];
+
+        async function loadOperators() {
+            const loadingEl = document.getElementById('loadingMessage');
+            
+            try {
+                loadingEl.classList.remove('hidden');
+                
+                const data = await api('/operators');
+                allOperators = data.items;
+                
+                updateStats(data.stats);
+                displayOperators(allOperators);
+                
+            } catch (error) {
+                console.error('Load operators error:', error);
+                if (error.message.includes('Non connecté')) {
+                    showLogin();
+                }
+            } finally {
+                loadingEl.classList.add('hidden');
+            }
+        }
+
+        function filterOperators() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            let filtered = allOperators.filter(op => {
+                const matchesSearch = !searchTerm || 
+                    op.nomComplet.toLowerCase().includes(searchTerm) ||
+                    op.email.toLowerCase().includes(searchTerm) ||
+                    op.neurotype.toLowerCase().includes(searchTerm);
+
+                const matchesStatus = !statusFilter || op.statutUrgence === statusFilter;
+
+                return matchesSearch && matchesStatus;
+            });
+
+            displayOperators(filtered);
+        }
+
+        function displayOperators(operators) {
+            displayOperatorCards(operators);
+            displayOperatorTable(operators);
+        }
+
+        function displayOperatorCards(operators) {
+            const container = document.getElementById('operatorsGrid');
+            
+            if (operators.length === 0) {
+                container.innerHTML = '<div class="loading">Aucun opérateur trouvé</div>';
+                return;
+            }
+
+            container.innerHTML = operators.map(op => `
+                <div class="operator-card">
+                    <div class="operator-header">
+                        <div class="operator-name">${op.nomComplet}</div>
+                        <div class="status-badge ${op.statutUrgence.toLowerCase().replace('à ', '').replace(' ', '')}">${op.statutUrgence}</div>
+                    </div>
+                    <div class="operator-details">
+                        <div class="detail-row">
+                            <span>Email:</span>
+                            <span>${op.email}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Neurotype:</span>
+                            <span>${op.neurotype}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Dernier scan:</span>
+                            <span>${formatDate(op.dateDernierScan)}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Stress:</span>
+                            <span>${op.niveauStress}%</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Performance:</span>
+                            <span>${op.performanceCognitive}%</span>
+                        </div>
+                        ${op.notes ? `<div style="margin-top: 0.5rem; font-style: italic; color: var(--text-secondary);">${op.notes}</div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function displayOperatorTable(operators) {
+            const tbody = document.getElementById('operatorsTableBody');
+            
+            if (operators.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Aucun opérateur trouvé</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = operators.map(op => `
+                <tr>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <div class="status-dot status-${op.statutUrgence.toLowerCase().replace('à ', '').replace(' ', '')}"></div>
+                            ${op.statutUrgence}
+                        </div>
+                    </td>
+                    <td>${op.nomComplet}</td>
+                    <td>${op.email}</td>
+                    <td>${op.neurotype}</td>
+                    <td>${formatDate(op.dateDernierScan)}</td>
+                    <td>${op.niveauStress}%</td>
+                    <td>${op.performanceCognitive}%</td>
+                </tr>
+            `).join('');
+        }
+
+        function updateStats(stats) {
+            const container = document.getElementById('statsContainer');
+            container.innerHTML = `
+                <div class="stat-item">
+                    <span>Total: <strong>${stats.total}</strong></span>
+                </div>
+                <div class="stat-item">
+                    <div class="status-dot status-critique"></div>
+                    <span>Critique: <strong>${stats.critique}</strong></span>
+                </div>
+                <div class="stat-item">
+                    <div class="status-dot status-surveiller"></div>
+                    <span>À surveiller: <strong>${stats.surveiller}</strong></span>
+                </div>
+                <div class="stat-item">
+                    <div class="status-dot status-stable"></div>
+                    <span>Stable: <strong>${stats.stable}</strong></span>
+                </div>
+            `;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleString('fr-FR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => {
+            showLogin();
+        });
+    </script>
+</body>
+</html>
+
