@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QG Neuro-Architecte™</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ff4444;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            background: #ff4444;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .logo h1 {
+            color: #ff4444;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #ff4444;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #ff6666;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #ccc;
+            border: 1px solid #555;
+        }
+
+        .btn-secondary:hover {
+            background: #555;
+            color: white;
+        }
+
+        .main-content {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            padding: 0.75rem;
+            border: 1px solid #555;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .search-box::placeholder {
+            color: #aaa;
+        }
+
+        .filter-select {
+            padding: 0.75rem;
+            border: 1px solid #555;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        .critique { color: #ff4444; }
+        .surveiller { color: #ff8800; }
+        .stable { color: #44ff44; }
+
+        .operators-table {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .table-header {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: 100px 1fr 1fr 1fr 120px 80px 80px;
+            gap: 1rem;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .operator-row {
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: 100px 1fr 1fr 1fr 120px 80px 80px;
+            gap: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .operator-row:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .status-critique {
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff4444;
+            border: 1px solid #ff4444;
+        }
+
+        .status-surveiller {
+            background: rgba(255, 136, 0, 0.2);
+            color: #ff8800;
+            border: 1px solid #ff8800;
+        }
+
+        .status-stable {
+            background: rgba(68, 255, 68, 0.2);
+            color: #44ff44;
+            border: 1px solid #44ff44;
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .login-form {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-form h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #ff4444;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ccc;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #555;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #2d2d2d;
+            border-radius: 15px;
+            width: 95%;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 2px solid #ff4444;
+        }
+
+        .modal-header {
+            background: #ff4444;
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #555;
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+            font-size: 1rem;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: #ff4444;
+            border-bottom-color: #ff4444;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .info-card h4 {
+            color: #ff4444;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.2);
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .progress-green { background: #44ff44; }
+        .progress-orange { background: #ff8800; }
+        .progress-red { background: #ff4444; }
+
+        .neurotransmitter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .neurotransmitter-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .neurotransmitter-name {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #ccc;
+        }
+
+        .neurotransmitter-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .neurotransmitter-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .neurotransmitter-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .ondes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .onde-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .onde-name {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        .onde-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .questionnaire-section {
+            margin-bottom: 2rem;
+        }
+
+        .questionnaire-section h4 {
+            color: #ff4444;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            border-bottom: 1px solid #555;
+            padding-bottom: 0.5rem;
+        }
+
+        .question-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 6px;
+            border-left: 3px solid #ff4444;
+        }
+
+        .question-text {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #ccc;
+        }
+
+        .question-answer {
+            color: #ff4444;
+            font-weight: bold;
+        }
+
+        .notes-section {
+            margin-top: 2rem;
+        }
+
+        .notes-textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 1rem;
+            border: 1px solid #555;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+        }
+
+        .notes-textarea::placeholder {
+            color: #aaa;
+        }
+
+        .save-notes-btn {
+            margin-top: 1rem;
+            background: #44ff44;
+            color: #000;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .save-notes-btn:hover {
+            background: #66ff66;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .alert-danger {
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff4444;
+            border: 1px solid #ff4444;
+        }
+
+        .alert-warning {
+            background: rgba(255, 136, 0, 0.2);
+            color: #ff8800;
+            border: 1px solid #ff8800;
+        }
+
+        .alert-success {
+            background: rgba(68, 255, 68, 0.2);
+            color: #44ff44;
+            border: 1px solid #44ff44;
+        }
+
+        .protocol-section {
+            background: rgba(68, 255, 68, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid #44ff44;
+            margin-top: 1rem;
+        }
+
+        .protocol-section h4 {
+            color: #44ff44;
+            margin-bottom: 1rem;
+        }
+
+        .protocol-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .protocol-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(68, 255, 68, 0.2);
+        }
+
+        .protocol-list li:last-child {
+            border-bottom: none;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .search-box {
+                min-width: auto;
+            }
+
+            .table-header,
+            .operator-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+                text-align: center;
+            }
+
+            .table-header {
+                display: none;
+            }
+
+            .operator-row {
+                background: rgba(255, 255, 255, 0.1);
+                margin-bottom: 1rem;
+                border-radius: 8px;
+                padding: 1rem;
+            }
+
+            .modal-content {
+                width: 98%;
+                margin: 1%;
+                max-height: 95vh;
+            }
+
+            .modal-body {
+                padding: 1rem;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+
+            .tab {
+                flex: 1;
+                min-width: 120px;
+                padding: 0.75rem 1rem;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .neurotransmitter-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .ondes-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Form -->
+    <div id="loginContainer" class="login-container">
+        <form id="loginForm" class="login-form">
+            <div class="logo" style="justify-content: center; margin-bottom: 2rem;">
+                <div class="logo-icon">IZ</div>
+                <h1>QG Neuro-Architecte™</h1>
+            </div>
+            <h2>Connexion Sécurisée</h2>
+            <div class="form-group">
+                <label for="email">Email :</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Mot de passe :</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Se connecter</button>
+        </form>
+    </div>
+
+    <!-- Main Application -->
+    <div id="mainApp" style="display: none;">
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">IZ</div>
+                <h1>QG Neuro-Architecte™</h1>
+            </div>
+            <div class="user-info">
+                <span id="userName">Irwin Zelphin - Coach Principal</span>
+                <button id="logoutBtn" class="btn btn-secondary">Déconnexion</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="controls">
+                <input type="text" id="searchBox" class="search-box" placeholder="Rechercher (nom, email, neurotype...)">
+                <select id="statusFilter" class="filter-select">
+                    <option value="">Tous les statuts</option>
+                    <option value="Critique">Critique</option>
+                    <option value="À Surveiller">À Surveiller</option>
+                    <option value="Stable">Stable</option>
+                </select>
+                <button id="refreshBtn" class="btn btn-primary">🔄 Actualiser</button>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalCount">0</div>
+                    <div class="stat-label">Total</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number critique" id="critiqueCount">0</div>
+                    <div class="stat-label">● Critique</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number surveiller" id="surveillerCount">0</div>
+                    <div class="stat-label">● À surveiller</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number stable" id="stableCount">0</div>
+                    <div class="stat-label">● Stable</div>
+                </div>
+            </div>
+
+            <div class="operators-table">
+                <div class="table-header">
+                    <div>Statut</div>
+                    <div>Nom</div>
+                    <div>Email</div>
+                    <div>Neurotype</div>
+                    <div>Dernier Scan</div>
+                    <div>Stress</div>
+                    <div>Performance</div>
+                </div>
+                <div id="operatorsList"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal pour les détails d'un opérateur -->
+    <div id="operatorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Détails Opérateur</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('synthese')">Synthèse & Plan d'Action</button>
+                    <button class="tab" onclick="showTab('scan')">Scan Supra-Code</button>
+                    <button class="tab" onclick="showTab('questionnaires')">Questionnaires & Données</button>
+                </div>
+
+                <!-- Onglet Synthèse -->
+                <div id="synthese" class="tab-content active">
+                    <div id="alertsContainer"></div>
+                    
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <h4>📋 Profil Opérateur</h4>
+                            <div id="operatorProfile"></div>
+                        </div>
+                        <div class="info-card">
+                            <h4>🧠 Neurotype & Performance</h4>
+                            <div id="neurtypeInfo"></div>
+                        </div>
+                    </div>
+
+                    <div class="protocol-section">
+                        <h4>🎯 Protocole Recommandé</h4>
+                        <div id="protocolContent"></div>
+                    </div>
+
+                    <div class="notes-section">
+                        <h4>📝 Notes du Coach</h4>
+                        <textarea id="notesTextarea" class="notes-textarea" placeholder="Saisir les notes du coach..."></textarea>
+                        <button id="saveNotesBtn" class="save-notes-btn">💾 Sauvegarder les notes</button>
+                    </div>
+                </div>
+
+                <!-- Onglet Scan -->
+                <div id="scan" class="tab-content">
+                    <div class="info-card">
+                        <h4>📊 Scores par Blocs</h4>
+                        <div id="blocsScores"></div>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>🧪 Neurotransmetteurs</h4>
+                        <div id="neurotransmitters"></div>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>🌊 Ondes Cérébrales</h4>
+                        <div id="ondesCerebrales"></div>
+                    </div>
+                </div>
+
+                <!-- Onglet Questionnaires -->
+                <div id="questionnaires" class="tab-content">
+                    <div class="questionnaire-section">
+                        <h4>🔬 Questionnaire SUPRA-SCAN (28 questions)</h4>
+                        <div id="questionnaireSupra"></div>
+                    </div>
+
+                    <div class="questionnaire-section">
+                        <h4>🍎 Questionnaire Nutrition</h4>
+                        <div id="questionnaireNutrition"></div>
+                    </div>
+
+                    <div class="questionnaire-section">
+                        <h4>😴 Questionnaire Sommeil</h4>
+                        <div id="questionnaireSommeil"></div>
+                    </div>
+
+                    <div class="questionnaire-section">
+                        <h4>🔬 Bilans Additionnels</h4>
+                        <div id="bilansAdditionnels"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let operators = [];
+        let currentOperator = null;
+
+        // Questions SUPRA-SCAN
+        const supraQuestions = {
+            'q1': 'Vous sentez-vous souvent démotivé pour attaquer des projets importants ?',
+            'q2': 'Ressentez-vous une perte de plaisir même après des réussites ?',
+            'q3': 'Vos humeurs varient-elles fortement selon les situations ?',
+            'q4': 'Avez-vous tendance à vous sentir anxieux sans raison apparente ?',
+            'q5': 'Vous arrive-t-il de perdre rapidement votre concentration ?',
+            'q6': 'Avez-vous des difficultés à retenir des informations nouvelles ?',
+            'q7': 'Ressentez-vous des palpitations ou tensions face aux imprévus ?',
+            'q8': 'Avez-vous des difficultés à vous détendre après une journée active ?',
+            'q9': 'Votre cerveau "s\'emballe-t-il" mentalement (hyperactivité cognitive) ?',
+            'q10': 'Ressentez-vous du plaisir à être en nature, à méditer ou à ralentir ?',
+            'q11': 'Votre capacité à résister au stress prolongé est :',
+            'q12': 'Votre tolérance à la douleur (physique ou émotionnelle) est :',
+            'q13': 'Ressentez-vous une fatigue générale constante malgré le repos ?',
+            'q14': 'Le matin, votre niveau d\'énergie est :',
+            'q15': 'Votre qualité de sommeil est :',
+            'q16': 'Votre libido ou désir sexuel est :',
+            'q17': 'Vous sentez-vous naturellement en confiance avec les autres ?',
+            'q18': 'Avez-vous des variations d\'appétit fortes selon vos émotions ?',
+            'q19': 'Avez-vous des crampes musculaires, paupières qui sautent ou spasmes ?',
+            'q20': 'Vos ongles ou cheveux sont-ils fragiles, cassants ou tombent facilement ?',
+            'q21': 'Avez-vous régulièrement des problèmes digestifs (lourdeurs, ballonnements) ?',
+            'q22': 'Supportez-vous mal la chaleur ou la déshydratation ?',
+            'q23': 'Êtes-vous souvent sujet à des "vides mentaux" ou des absences cognitives momentanées ?',
+            'q24': 'Vous endormez-vous facilement et dormez-vous profondément ? (Delta)',
+            'q25': 'Avez-vous des moments d\'inspiration créative (visualisations internes fortes) ? (Theta)',
+            'q26': 'Pouvez-vous vous détendre rapidement en journée (calme mental rapide) ? (Alpha)',
+            'q27': 'Pouvez-vous rester concentré 60 minutes sur une tâche importante ? (Beta)',
+            'q28': 'Avez-vous des pics de lucidité où tout devient clair et logique ? (Gamma)'
+        };
+
+        const answerLabels = {
+            'A': 'Très souvent / Très difficilement / Très faible',
+            'B': 'Parfois / Parfois difficilement / Faible',
+            'C': 'Rarement / Correctement / Bonne',
+            'D': 'Jamais / Très facilement / Très bonne'
+        };
+
+        // Vérification de l'authentification au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+        });
+
+        // Gestion de la connexion
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password }),
+                    credentials: 'include'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentUser = data.user;
+                    showMainApp();
+                    loadOperators();
+                } else {
+                    alert('Erreur de connexion: ' + data.error);
+                }
+            } catch (error) {
+                alert('Erreur de connexion: ' + error.message);
+            }
+        });
+
+        // Déconnexion
+        document.getElementById('logoutBtn').addEventListener('click', async function() {
+            try {
+                await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                currentUser = null;
+                showLoginForm();
+            } catch (error) {
+                console.error('Erreur de déconnexion:', error);
+            }
+        });
+
+        // Vérification de l'authentification
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/check', {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                
+                if (data.authenticated) {
+                    showMainApp();
+                    loadOperators();
+                } else {
+                    showLoginForm();
+                }
+            } catch (error) {
+                showLoginForm();
+            }
+        }
+
+        function showLoginForm() {
+            document.getElementById('loginContainer').style.display = 'flex';
+            document.getElementById('mainApp').style.display = 'none';
+        }
+
+        function showMainApp() {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+        }
+
+        // Chargement des opérateurs
+        async function loadOperators() {
+            try {
+                const searchQuery = document.getElementById('searchBox').value;
+                const statusFilter = document.getElementById('statusFilter').value;
+                
+                const params = new URLSearchParams();
+                if (searchQuery) params.append('q', searchQuery);
+                if (statusFilter) params.append('statut', statusFilter);
+                
+                const response = await fetch(`/api/operators?${params}`, {
+                    credentials: 'include'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    operators = data.items;
+                    updateStats(data.stats);
+                    renderOperators();
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement:', error);
+            }
+        }
+
+        function updateStats(stats) {
+            document.getElementById('totalCount').textContent = stats.total;
+            document.getElementById('critiqueCount').textContent = stats.critique;
+            document.getElementById('surveillerCount').textContent = stats.surveiller;
+            document.getElementById('stableCount').textContent = stats.stable;
+        }
+
+        function renderOperators() {
+            const container = document.getElementById('operatorsList');
+            container.innerHTML = '';
+            
+            operators.forEach(operator => {
+                const row = document.createElement('div');
+                row.className = 'operator-row';
+                row.onclick = () => openOperatorModal(operator.id);
+                
+                const statusClass = operator.statut_urgence === 'Critique' ? 'status-critique' :
+                                  operator.statut_urgence === 'À Surveiller' ? 'status-surveiller' : 'status-stable';
+                
+                const date = new Date(operator.date_dernier_scan).toLocaleDateString('fr-FR');
+                
+                row.innerHTML = `
+                    <div><span class="status-badge ${statusClass}">${operator.statut_urgence}</span></div>
+                    <div><strong>${operator.nom_complet}</strong></div>
+                    <div>${operator.email}</div>
+                    <div>${operator.neurotype}</div>
+                    <div>${date}</div>
+                    <div>${operator.niveau_stress}%</div>
+                    <div>${operator.performance_cognitive}%</div>
+                `;
+                
+                container.appendChild(row);
+            });
+        }
+
+        // Gestion du modal
+        async function openOperatorModal(operatorId) {
+            try {
+                const response = await fetch(`/api/operators/${operatorId}`, {
+                    credentials: 'include'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentOperator = data.operator;
+                    populateModal(currentOperator);
+                    document.getElementById('operatorModal').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement de l\'opérateur:', error);
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('operatorModal').style.display = 'none';
+            currentOperator = null;
+        }
+
+        function showTab(tabName) {
+            // Masquer tous les onglets
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Afficher l'onglet sélectionné
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function populateModal(operator) {
+            document.getElementById('modalTitle').textContent = operator.nom_complet;
+            
+            // Alertes critiques
+            const alertsContainer = document.getElementById('alertsContainer');
+            alertsContainer.innerHTML = '';
+            
+            const criticalBlocs = [];
+            Object.entries(operator.pourcentages).forEach(([bloc, score]) => {
+                if (score < 30) {
+                    criticalBlocs.push(`${bloc.toUpperCase()}: ${score}%`);
+                }
+            });
+            
+            if (criticalBlocs.length > 0) {
+                const alert = document.createElement('div');
+                alert.className = 'alert alert-danger';
+                alert.innerHTML = `<strong>🚨 ALERTE CRITIQUE:</strong> Blocs déficitaires: ${criticalBlocs.join(', ')}`;
+                alertsContainer.appendChild(alert);
+            } else if (operator.statut_urgence === 'À Surveiller') {
+                const alert = document.createElement('div');
+                alert.className = 'alert alert-warning';
+                alert.innerHTML = `<strong>⚠️ SURVEILLANCE:</strong> Opérateur à surveiller de près`;
+                alertsContainer.appendChild(alert);
+            } else {
+                const alert = document.createElement('div');
+                alert.className = 'alert alert-success';
+                alert.innerHTML = `<strong>✅ STABLE:</strong> Performance dans les normes`;
+                alertsContainer.appendChild(alert);
+            }
+            
+            // Profil opérateur
+            document.getElementById('operatorProfile').innerHTML = `
+                <p><strong>Email:</strong> ${operator.email}</p>
+                <p><strong>Téléphone:</strong> ${operator.telephone}</p>
+                <p><strong>Neurotype:</strong> ${operator.neurotype}</p>
+                <p><strong>Dernier scan:</strong> ${new Date(operator.date_dernier_scan).toLocaleString('fr-FR')}</p>
+            `;
+            
+            // Neurotype et performance
+            document.getElementById('neurtypeInfo').innerHTML = `
+                <p><strong>Niveau de stress:</strong> <span class="${operator.niveau_stress > 70 ? 'critique' : operator.niveau_stress > 50 ? 'surveiller' : 'stable'}">${operator.niveau_stress}%</span></p>
+                <p><strong>Performance cognitive:</strong> <span class="${operator.performance_cognitive < 50 ? 'critique' : operator.performance_cognitive < 70 ? 'surveiller' : 'stable'}">${operator.performance_cognitive}%</span></p>
+                <p><strong>Statut:</strong> <span class="${operator.statut_urgence === 'Critique' ? 'critique' : operator.statut_urgence === 'À Surveiller' ? 'surveiller' : 'stable'}">${operator.statut_urgence}</span></p>
+            `;
+            
+            // Protocole recommandé
+            if (operator.protocole_recommande) {
+                const protocolItems = operator.protocole_recommande.split(/\d+\)/).filter(item => item.trim());
+                const protocolList = protocolItems.map((item, index) => `<li><strong>${index + 1})</strong> ${item.trim()}</li>`).join('');
+                document.getElementById('protocolContent').innerHTML = `<ul class="protocol-list">${protocolList}</ul>`;
+            } else {
+                document.getElementById('protocolContent').innerHTML = '<p>Protocole en cours d\'élaboration...</p>';
+            }
+            
+            // Notes du coach
+            document.getElementById('notesTextarea').value = operator.notes_coach || '';
+            
+            // Scores par blocs
+            const blocsContainer = document.getElementById('blocsScores');
+            blocsContainer.innerHTML = '';
+            
+            Object.entries(operator.pourcentages).forEach(([bloc, score]) => {
+                const blocDiv = document.createElement('div');
+                blocDiv.style.marginBottom = '1rem';
+                
+                const colorClass = score < 30 ? 'progress-red' : score < 70 ? 'progress-orange' : 'progress-green';
+                
+                blocDiv.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <strong>${bloc.toUpperCase()}</strong>
+                        <span>${score}%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill ${colorClass}" style="width: ${score}%">${score}%</div>
+                    </div>
+                `;
+                
+                blocsContainer.appendChild(blocDiv);
+            });
+            
+            // Neurotransmetteurs
+            const neurotransmittersContainer = document.getElementById('neurotransmitters');
+            neurotransmittersContainer.innerHTML = '<div class="neurotransmitter-grid"></div>';
+            const grid = neurotransmittersContainer.querySelector('.neurotransmitter-grid');
+            
+            Object.entries(operator.sous_scores).forEach(([neurotransmitter, score]) => {
+                const card = document.createElement('div');
+                card.className = 'neurotransmitter-card';
+                
+                const colorClass = score < 30 ? 'progress-red' : score < 70 ? 'progress-orange' : 'progress-green';
+                const valueClass = score < 30 ? 'critique' : score < 70 ? 'surveiller' : 'stable';
+                
+                card.innerHTML = `
+                    <div class="neurotransmitter-name">${neurotransmitter.charAt(0).toUpperCase() + neurotransmitter.slice(1)}</div>
+                    <div class="neurotransmitter-value ${valueClass}">${score}%</div>
+                    <div class="neurotransmitter-bar">
+                        <div class="neurotransmitter-fill ${colorClass}" style="width: ${score}%"></div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+            
+            // Ondes cérébrales
+            if (operator.ondes_cerebrales) {
+                const ondesContainer = document.getElementById('ondesCerebrales');
+                ondesContainer.innerHTML = '<div class="ondes-grid"></div>';
+                const ondesGrid = ondesContainer.querySelector('.ondes-grid');
+                
+                const ondesLabels = {
+                    'delta': 'Delta (Sommeil)',
+                    'theta': 'Theta (Créativité)',
+                    'alpha': 'Alpha (Calme)',
+                    'beta': 'Beta (Focus)',
+                    'gamma': 'Gamma (Lucidité)'
+                };
+                
+                Object.entries(operator.ondes_cerebrales).forEach(([onde, score]) => {
+                    const card = document.createElement('div');
+                    card.className = 'onde-card';
+                    
+                    const valueClass = score < 30 ? 'critique' : score < 70 ? 'surveiller' : 'stable';
+                    
+                    card.innerHTML = `
+                        <div class="onde-name">${ondesLabels[onde]}</div>
+                        <div class="onde-value ${valueClass}">${score}%</div>
+                    `;
+                    
+                    ondesGrid.appendChild(card);
+                });
+            }
+            
+            // Questionnaire SUPRA-SCAN
+            if (operator.questionnaire_supra) {
+                const supraContainer = document.getElementById('questionnaireSupra');
+                supraContainer.innerHTML = '';
+                
+                Object.entries(operator.questionnaire_supra).forEach(([questionId, answer]) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'question-item';
+                    
+                    questionDiv.innerHTML = `
+                        <div class="question-text">${questionId.toUpperCase()}: ${supraQuestions[questionId]}</div>
+                        <div class="question-answer">Réponse: ${answer} - ${answerLabels[answer]}</div>
+                    `;
+                    
+                    supraContainer.appendChild(questionDiv);
+                });
+            }
+            
+            // Questionnaire Nutrition
+            if (operator.questionnaire_nutrition) {
+                const nutritionContainer = document.getElementById('questionnaireNutrition');
+                nutritionContainer.innerHTML = '';
+                
+                Object.entries(operator.questionnaire_nutrition).forEach(([key, value]) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'question-item';
+                    
+                    const label = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    
+                    questionDiv.innerHTML = `
+                        <div class="question-text">${label}:</div>
+                        <div class="question-answer">${value}</div>
+                    `;
+                    
+                    nutritionContainer.appendChild(questionDiv);
+                });
+            }
+            
+            // Questionnaire Sommeil
+            if (operator.questionnaire_sommeil) {
+                const sommeilContainer = document.getElementById('questionnaireSommeil');
+                sommeilContainer.innerHTML = '';
+                
+                Object.entries(operator.questionnaire_sommeil).forEach(([key, value]) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'question-item';
+                    
+                    const label = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    
+                    questionDiv.innerHTML = `
+                        <div class="question-text">${label}:</div>
+                        <div class="question-answer">${value}</div>
+                    `;
+                    
+                    sommeilContainer.appendChild(questionDiv);
+                });
+            }
+            
+            // Bilans additionnels
+            if (operator.bilans_additionnels) {
+                const bilansContainer = document.getElementById('bilansAdditionnels');
+                bilansContainer.innerHTML = '';
+                
+                Object.entries(operator.bilans_additionnels).forEach(([key, value]) => {
+                    const bilanDiv = document.createElement('div');
+                    bilanDiv.className = 'question-item';
+                    
+                    const label = key.charAt(0).toUpperCase() + key.slice(1);
+                    
+                    bilanDiv.innerHTML = `
+                        <div class="question-text">📊 ${label}:</div>
+                        <div class="question-answer">${value}</div>
+                    `;
+                    
+                    bilansContainer.appendChild(bilanDiv);
+                });
+            }
+        }
+
+        // Sauvegarde des notes
+        document.getElementById('saveNotesBtn').addEventListener('click', async function() {
+            if (!currentOperator) return;
+            
+            const notes = document.getElementById('notesTextarea').value;
+            
+            try {
+                const response = await fetch(`/api/operators/${currentOperator.id}/notes`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ notes }),
+                    credentials: 'include'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Notes sauvegardées avec succès !');
+                    currentOperator.notes_coach = notes;
+                } else {
+                    alert('Erreur lors de la sauvegarde: ' + data.error);
+                }
+            } catch (error) {
+                alert('Erreur lors de la sauvegarde: ' + error.message);
+            }
+        });
+
+        // Event listeners pour les filtres
+        document.getElementById('searchBox').addEventListener('input', loadOperators);
+        document.getElementById('statusFilter').addEventListener('change', loadOperators);
+        document.getElementById('refreshBtn').addEventListener('click', loadOperators);
+
+        // Fermer le modal en cliquant à l'extérieur
+        document.getElementById('operatorModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
+
