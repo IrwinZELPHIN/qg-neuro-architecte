@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QG Neuro-Architecte™</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        /* Login Styles */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+        }
+
+        .login-form {
+            background: rgba(26, 26, 26, 0.95);
+            padding: 3rem;
+            border-radius: 16px;
+            border: 1px solid #333;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 400px;
+            backdrop-filter: blur(10px);
+        }
+
+        .login-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ff4444;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ccc;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff4444;
+            box-shadow: 0 0 0 2px rgba(255, 68, 68, 0.2);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #ff4444 0%, #cc3333 100%);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 68, 68, 0.3);
+        }
+
+        .error-message {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid #ff4444;
+            color: #ff4444;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(26, 26, 26, 0.95);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: contain;
+            background: transparent;
+        }
+
+        .app-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ff4444;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .user-role {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .logout-btn {
+            background: #ff4444;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #cc3333;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 0;
+            margin: 2rem;
+            background: #2a2a2a;
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            color: #888;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tab:hover {
+            color: #fff;
+            background: rgba(255, 68, 68, 0.1);
+        }
+
+        .nav-tab.active {
+            background: #ff4444;
+            color: #fff;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            padding: 0 2rem 2rem;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(26, 26, 26, 0.8);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #333;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            border-color: #ff4444;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .stat-critique .stat-number { color: #ff4444; }
+        .stat-surveiller .stat-number { color: #ffaa00; }
+        .stat-stable .stat-number { color: #00ff88; }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input, .filter-select {
+            padding: 0.8rem 1rem;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .refresh-btn {
+            background: #ff4444;
+            color: #fff;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            background: #cc3333;
+        }
+
+        /* Table */
+        .operators-table {
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 12px;
+            border: 1px solid #333;
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 2fr 2fr 1.5fr 1.5fr 1.5fr 1.5fr 1fr;
+            background: #333;
+            padding: 1rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .table-body {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .operator-row {
+            display: grid;
+            grid-template-columns: 2fr 2fr 1.5fr 1.5fr 1.5fr 1.5fr 1fr;
+            padding: 1rem;
+            border-bottom: 1px solid #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .operator-row:hover {
+            background: rgba(255, 68, 68, 0.1);
+        }
+
+        .operator-cell {
+            display: flex;
+            align-items: center;
+            padding: 0 0.5rem;
+        }
+
+        .operator-name {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .operator-email {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .neurotype {
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff4444;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-critique {
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff4444;
+        }
+
+        .status-surveiller {
+            background: rgba(255, 170, 0, 0.2);
+            color: #ffaa00;
+        }
+
+        .status-stable {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+        }
+
+        /* No Data */
+        .no-data {
+            text-align: center;
+            padding: 3rem;
+            color: #888;
+        }
+
+        .no-data-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .no-data-subtext {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-content {
+            background-color: #1a1a1a;
+            margin: 2% auto;
+            padding: 0;
+            border-radius: 12px;
+            width: 95%;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid #333;
+        }
+
+        .modal-header {
+            background: #333;
+            padding: 1.5rem 2rem;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            color: #ff4444;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff4444;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-tabs {
+                margin: 1rem;
+                flex-direction: column;
+            }
+
+            .tab-content {
+                padding: 0 1rem 1rem;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .search-input {
+                min-width: auto;
+            }
+
+            .table-header, .operator-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .operator-cell {
+                justify-content: space-between;
+                padding: 0.5rem 0;
+            }
+
+            .modal-content {
+                margin: 1rem;
+                width: calc(100% - 2rem);
+            }
+
+            .modal-body {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Form -->
+    <div id="loginContainer" class="login-container">
+        <form id="loginForm" class="login-form">
+            <div class="login-title">QG Neuro-Architecte™</div>
+            <div id="loginError" class="error-message" style="display: none;"></div>
+            <div class="form-group">
+                <label for="email">📧 Email</label>
+                <input type="email" id="email" name="email" required placeholder="contact@izsupra.com">
+            </div>
+            <div class="form-group">
+                <label for="password">🔑 Mot de passe</label>
+                <input type="password" id="password" name="password" required placeholder="Votre mot de passe">
+            </div>
+            <button type="submit" class="login-btn">Se connecter</button>
+        </form>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-section">
+                <img src="/static/logo.png" alt="Logo" class="logo">
+                <div class="app-title">QG Neuro-Architecte™</div>
+            </div>
+            <div class="user-section">
+                <div class="user-info">
+                    <div class="user-name">Irwin Zelphin - Coach Principal</div>
+                    <div class="user-role">Administrateur</div>
+                </div>
+                <button id="logoutBtn" class="logout-btn">🚪 Déconnexion</button>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="operators">👥 Opérateurs QG</button>
+            <button class="nav-tab" data-tab="supra-scans">📊 Scans Supra</button>
+        </div>
+
+        <!-- Operators Tab -->
+        <div id="operators-tab" class="tab-content active">
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalCount">0</div>
+                    <div class="stat-label">👥 Total</div>
+                </div>
+                <div class="stat-card stat-critique">
+                    <div class="stat-number" id="critiqueCount">0</div>
+                    <div class="stat-label">🔴 Critique</div>
+                </div>
+                <div class="stat-card stat-surveiller">
+                    <div class="stat-number" id="surveillerCount">0</div>
+                    <div class="stat-label">🟡 À surveiller</div>
+                </div>
+                <div class="stat-card stat-stable">
+                    <div class="stat-number" id="stableCount">0</div>
+                    <div class="stat-label">🟢 Stable</div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls">
+                <input type="text" id="searchInput" class="search-input" placeholder="Rechercher (nom, email, neurotype...)">
+                <select id="statusFilter" class="filter-select">
+                    <option value="">Tous les statuts</option>
+                    <option value="Critique">🔴 Critique</option>
+                    <option value="À Surveiller">🟡 À surveiller</option>
+                    <option value="Stable">🟢 Stable</option>
+                </select>
+                <button id="refreshBtn" class="refresh-btn">🔄 Actualiser</button>
+            </div>
+
+            <!-- Operators Table -->
+            <div class="operators-table">
+                <div class="table-header">
+                    <div>Statut</div>
+                    <div>Nom</div>
+                    <div>Email</div>
+                    <div>Neurotype</div>
+                    <div>Dernier Scan</div>
+                    <div>Stress</div>
+                    <div>Performance</div>
+                </div>
+                <div class="table-body" id="operatorsList">
+                    <div class="no-data">
+                        <div class="no-data-icon">👥</div>
+                        <div class="no-data-text">Chargement des opérateurs...</div>
+                        <div class="no-data-subtext">Veuillez patienter</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Supra Scans Tab -->
+        <div id="supra-scans-tab" class="tab-content">
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="supraTotalCount">0</div>
+                    <div class="stat-label">📊 Total Scans</div>
+                </div>
+                <div class="stat-card stat-critique">
+                    <div class="stat-number" id="supraTodayCount">0</div>
+                    <div class="stat-label">📅 Aujourd'hui</div>
+                </div>
+                <div class="stat-card stat-surveiller">
+                    <div class="stat-number" id="supraWeekCount">0</div>
+                    <div class="stat-label">📊 Cette semaine</div>
+                </div>
+                <div class="stat-card stat-stable">
+                    <div class="stat-number" id="supraMonthCount">0</div>
+                    <div class="stat-label">📈 Ce mois</div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls">
+                <input type="text" id="supraSearchInput" class="search-input" placeholder="Rechercher (nom, email, neurotype, discipline...)">
+                <button id="refreshSupraBtn" class="refresh-btn">🔄 Actualiser</button>
+            </div>
+
+            <!-- Supra Scans Table -->
+            <div class="operators-table">
+                <div class="table-header">
+                    <div>Client</div>
+                    <div>Email</div>
+                    <div>Téléphone</div>
+                    <div>Neurotype</div>
+                    <div>Discipline</div>
+                    <div>Dernier Scan</div>
+                    <div>Total Scans</div>
+                </div>
+                <div class="table-body" id="supraTableBody">
+                    <div class="no-data">
+                        <div class="no-data-icon">📊</div>
+                        <div class="no-data-text">Aucun scan Supra reçu</div>
+                        <div class="no-data-subtext">Les résultats apparaîtront ici dès réception</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let currentOperators = [];
+        let currentSupraScans = [];
+        const API_BASE = '';
+
+        // Éléments DOM
+        const loginForm = document.getElementById('loginForm');
+        const loginContainer = document.getElementById('loginContainer');
+        const loginError = document.getElementById('loginError');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const dashboard = document.getElementById('dashboard');
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            setupEventListeners();
+        });
+
+        // Configuration des événements
+        function setupEventListeners() {
+            // Login
+            if (loginForm) {
+                loginForm.addEventListener('submit', handleLogin);
+            }
+            
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', handleLogout);
+            }
+
+            // Navigation tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.dataset.tab;
+                    switchMainTab(tabName);
+                });
+            });
+
+            // Dashboard controls
+            const searchInput = document.getElementById('searchInput');
+            const statusFilter = document.getElementById('statusFilter');
+            const refreshBtn = document.getElementById('refreshBtn');
+            const supraSearchInput = document.getElementById('supraSearchInput');
+            const refreshSupraBtn = document.getElementById('refreshSupraBtn');
+            
+            if (searchInput) searchInput.addEventListener('input', filterOperators);
+            if (statusFilter) statusFilter.addEventListener('change', filterOperators);
+            if (refreshBtn) refreshBtn.addEventListener('click', loadOperators);
+            if (supraSearchInput) supraSearchInput.addEventListener('input', filterSupraScans);
+            if (refreshSupraBtn) refreshSupraBtn.addEventListener('click', loadSupraScans);
+        }
+
+        // Authentification
+        async function checkAuth() {
+            try {
+                const response = await fetch(`${API_BASE}/api/auth/check`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                
+                if (data.authenticated) {
+                    showDashboard();
+                    loadOperators();
+                    loadSupraScans();
+                } else {
+                    showLogin();
+                }
+            } catch (error) {
+                console.error('Erreur lors de la vérification auth:', error);
+                showLogin();
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password }),
+                    credentials: 'include'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showDashboard();
+                    loadOperators();
+                    loadSupraScans();
+                } else {
+                    showError(data.error || 'Erreur de connexion');
+                }
+            } catch (error) {
+                console.error('Erreur login:', error);
+                showError('Erreur de connexion au serveur');
+            }
+        }
+
+        async function handleLogout() {
+            try {
+                await fetch(`${API_BASE}/api/auth/logout`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                showLogin();
+            } catch (error) {
+                console.error('Erreur logout:', error);
+                showLogin();
+            }
+        }
+
+        // Affichage des vues
+        function showLogin() {
+            if (loginContainer) loginContainer.style.display = 'flex';
+            if (dashboard) dashboard.style.display = 'none';
+            if (loginError) loginError.style.display = 'none';
+        }
+
+        function showDashboard() {
+            if (loginContainer) loginContainer.style.display = 'none';
+            if (dashboard) dashboard.style.display = 'block';
+        }
+
+        function showError(message) {
+            if (loginError) {
+                loginError.textContent = message;
+                loginError.style.display = 'block';
+            }
+        }
+
+        // Navigation entre onglets
+        function switchMainTab(tabName) {
+            // Désactiver tous les onglets
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Activer l'onglet sélectionné
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+
+            // Charger les données selon l'onglet
+            if (tabName === 'supra-scans') {
+                loadSupraScans();
+            } else if (tabName === 'operators') {
+                loadOperators();
+            }
+        }
+
+        // Fonctions Opérateurs
+        async function loadOperators() {
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/get-all-operators`, {
+                    credentials: 'include'
+                });
+                
+                const data = await response.json();
+                if (Array.isArray(data)) {
+                    currentOperators = data;
+                    displayOperators(currentOperators);
+                    updateStats(currentOperators);
+                }
+            } catch (error) {
+                console.error('Erreur chargement opérateurs:', error);
+            }
+        }
+
+        function displayOperators(operators) {
+            const operatorsList = document.getElementById('operatorsList');
+            
+            if (!operators || operators.length === 0) {
+                operatorsList.innerHTML = `
+                    <div class="no-data">
+                        <div class="no-data-icon">👥</div>
+                        <div class="no-data-text">Aucun opérateur trouvé</div>
+                        <div class="no-data-subtext">Les opérateurs apparaîtront ici</div>
+                    </div>
+                `;
+                return;
+            }
+
+            operatorsList.innerHTML = operators.map(operator => `
+                <div class="operator-row" onclick="showOperatorDetails('${operator.email}')">
+                    <div class="operator-cell">
+                        <span class="status-badge status-stable">
+                            🟢 Actif
+                        </span>
+                    </div>
+                    <div class="operator-cell">
+                        <div class="operator-name">${operator.nom}</div>
+                    </div>
+                    <div class="operator-cell">
+                        <div class="operator-email">${operator.email}</div>
+                    </div>
+                    <div class="operator-cell">
+                        <div class="neurotype">Supra Scan</div>
+                    </div>
+                    <div class="operator-cell">
+                        <div>${formatDate(operator.dernierScanDate)}</div>
+                    </div>
+                    <div class="operator-cell">
+                        <div class="stat-number" style="font-size: 1.2rem; color: #00ff88">${operator.totalScans}</div>
+                    </div>
+                    <div class="operator-cell">
+                        <div class="stat-number" style="font-size: 1.2rem; color: #00ff88">100%</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateStats(operators) {
+            const total = operators.length;
+            const critique = 0; // Pour l'instant, tous les opérateurs sont considérés comme stables
+            const surveiller = 0;
+            const stable = total;
+
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('critiqueCount').textContent = critique;
+            document.getElementById('surveillerCount').textContent = surveiller;
+            document.getElementById('stableCount').textContent = stable;
+        }
+
+        async function showOperatorDetails(email) {
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/get-operator-details/${encodeURIComponent(email)}`, {
+                    credentials: 'include'
+                });
+                
+                const data = await response.json();
+                if (data && !data.error) {
+                    showOperatorModal(email, data);
+                } else {
+                    alert('Erreur lors du chargement des détails de l\'opérateur');
+                }
+            } catch (error) {
+                console.error('Erreur chargement détails opérateur:', error);
+                alert('Erreur lors du chargement des détails');
+            }
+        }
+
+        function showOperatorModal(email, data) {
+            const accessLevel = data.profil.accessLevel || 'free';
+            const activationKey = data.profil.activationKey || null;
+            const accessStatusText = accessLevel === 'full' ? 'Accès Complet' : 'Accès Gratuit';
+            const accessStatusColor = accessLevel === 'full' ? '#00ff88' : '#ffaa00';
+            
+            // Créer le contenu de la modal
+            const modalContent = `
+                <div id="operatorModal" style="
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.8);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 1000;
+                ">
+                    <div style="
+                        background: #1a1a1a;
+                        border: 1px solid #333;
+                        border-radius: 16px;
+                        padding: 2rem;
+                        max-width: 600px;
+                        width: 90%;
+                        max-height: 80vh;
+                        overflow-y: auto;
+                    ">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <h2 style="color: #ff4444; margin: 0;">Gestion des Accès Opérateur</h2>
+                            <button onclick="closeOperatorModal()" style="
+                                background: none;
+                                border: none;
+                                color: #fff;
+                                font-size: 1.5rem;
+                                cursor: pointer;
+                                padding: 0.5rem;
+                            ">✕</button>
+                        </div>
+                        
+                        <div style="margin-bottom: 2rem;">
+                            <h3 style="color: #fff; margin-bottom: 1rem;">Informations Opérateur</h3>
+                            <div style="background: #2a2a2a; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                                <p style="color: #fff; margin: 0.5rem 0;"><strong>Nom:</strong> ${data.profil.clientName}</p>
+                                <p style="color: #fff; margin: 0.5rem 0;"><strong>Email:</strong> ${email}</p>
+                                <p style="color: #fff; margin: 0.5rem 0;"><strong>Téléphone:</strong> ${data.profil.clientPhone}</p>
+                                <p style="color: #fff; margin: 0.5rem 0;"><strong>Nombre de résultats:</strong> ${data.resultats.length}</p>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 2rem;">
+                            <h3 style="color: #fff; margin-bottom: 1rem;">Statut d'Accès</h3>
+                            <div style="background: #2a2a2a; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                                <p style="color: ${accessStatusColor}; margin: 0.5rem 0; font-size: 1.2rem; font-weight: bold;">
+                                    🔐 ${accessStatusText}
+                                </p>
+                                ${activationKey ? `
+                                    <p style="color: #fff; margin: 0.5rem 0;"><strong>Clé d'activation:</strong></p>
+                                    <div style="background: #333; padding: 0.5rem; border-radius: 4px; font-family: monospace; color: #00ff88;">
+                                        ${activationKey}
+                                    </div>
+                                ` : '<p style="color: #888; margin: 0.5rem 0;">Aucune clé d\'activation générée</p>'}
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 2rem;">
+                            <h3 style="color: #fff; margin-bottom: 1rem;">Actions Admin</h3>
+                            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                                <button onclick="generateActivationKey('${email}')" style="
+                                    background: #ff4444;
+                                    color: white;
+                                    border: none;
+                                    padding: 0.75rem 1.5rem;
+                                    border-radius: 8px;
+                                    cursor: pointer;
+                                    font-weight: bold;
+                                ">🔑 Générer Clé d'Activation</button>
+                                
+                                ${accessLevel === 'free' ? `
+                                    <button onclick="grantFullAccess('${email}')" style="
+                                        background: #00ff88;
+                                        color: black;
+                                        border: none;
+                                        padding: 0.75rem 1.5rem;
+                                        border-radius: 8px;
+                                        cursor: pointer;
+                                        font-weight: bold;
+                                    ">🚀 Accorder Accès Complet</button>
+                                ` : `
+                                    <div style="
+                                        background: #00ff88;
+                                        color: black;
+                                        padding: 0.75rem 1.5rem;
+                                        border-radius: 8px;
+                                        font-weight: bold;
+                                    ">✅ Accès Complet Accordé</div>
+                                `}
+                            </div>
+                        </div>
+                        
+                        ${data.resultats.length > 0 ? `
+                            <div>
+                                <h3 style="color: #fff; margin-bottom: 1rem;">Types de Scans Effectués</h3>
+                                <div style="background: #2a2a2a; padding: 1rem; border-radius: 8px;">
+                                    ${[...new Set(data.resultats.map(r => r.resultatType))].map(type => 
+                                        `<span style="
+                                            background: #ff4444;
+                                            color: white;
+                                            padding: 0.25rem 0.5rem;
+                                            border-radius: 4px;
+                                            margin: 0.25rem;
+                                            display: inline-block;
+                                            font-size: 0.9rem;
+                                        ">${type}</span>`
+                                    ).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            
+            // Ajouter la modal au DOM
+            document.body.insertAdjacentHTML('beforeend', modalContent);
+        }
+
+        function closeOperatorModal() {
+            const modal = document.getElementById('operatorModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        async function generateActivationKey(email) {
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/operators/${encodeURIComponent(email)}/generate-key`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                
+                const data = await response.json();
+                if (data.status === 'success') {
+                    alert(`Clé d'activation générée avec succès !\n\nClé: ${data.activationKey}\n\nVous pouvez maintenant copier cette clé et la fournir à votre client.`);
+                    closeOperatorModal();
+                    // Recharger les données pour mettre à jour l'affichage
+                    loadOperators();
+                } else {
+                    alert('Erreur lors de la génération de la clé d\'activation');
+                }
+            } catch (error) {
+                console.error('Erreur génération clé:', error);
+                alert('Erreur lors de la génération de la clé');
+            }
+        }
+
+        async function grantFullAccess(email) {
+            if (!confirm(`Êtes-vous sûr de vouloir accorder l'accès complet à ${email} ?`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/operators/${encodeURIComponent(email)}/grant-full-access`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                
+                const data = await response.json();
+                if (data.status === 'success') {
+                    alert(`Accès complet accordé avec succès à ${email} !`);
+                    closeOperatorModal();
+                    // Recharger les données pour mettre à jour l'affichage
+                    loadOperators();
+                } else {
+                    alert('Erreur lors de l\'octroi de l\'accès complet');
+                }
+            } catch (error) {
+                console.error('Erreur octroi accès:', error);
+                alert('Erreur lors de l\'octroi de l\'accès');
+            }
+        }
+
+        function filterOperators() {
+            const searchInput = document.getElementById('searchInput');
+            const statusFilter = document.getElementById('statusFilter');
+            const searchTerm = searchInput.value.toLowerCase();
+            const statusTerm = statusFilter.value;
+
+            const filtered = currentOperators.filter(operator => {
+                const matchesSearch = !searchTerm || 
+                    operator.nom.toLowerCase().includes(searchTerm) ||
+                    operator.email.toLowerCase().includes(searchTerm);
+
+                // Pour l'instant, on ignore le filtre de statut car tous sont "Actif"
+                const matchesStatus = !statusTerm || statusTerm === 'Stable';
+
+                return matchesSearch && matchesStatus;
+            });
+
+            displayOperators(filtered);
+        }
+
+        // Fonctions Supra Scans
+        async function loadSupraScans() {
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/get-all-operators`, {
+                    credentials: 'include'
+                });
+                
+                const data = await response.json();
+                if (Array.isArray(data)) {
+                    currentSupraScans = data;
+                    displaySupraScans(currentSupraScans);
+                    updateSupraStats(currentSupraScans);
+                }
+            } catch (error) {
+                console.error('Erreur chargement scans Supra:', error);
+            }
+        }
+
+        function displaySupraScans(scans) {
+            const tableBody = document.getElementById('supraTableBody');
+            
+            if (!scans || scans.length === 0) {
+                tableBody.innerHTML = `
+                    <div class="no-data">
+                        <div class="no-data-icon">📊</div>
+                        <div class="no-data-text">Aucun scan Supra reçu</div>
+                        <div class="no-data-subtext">Les résultats apparaîtront ici dès réception</div>
+                    </div>
+                `;
+                return;
+            }
+
+            tableBody.innerHTML = scans.map(scan => `
+                <div class="operator-row" onclick="showOperatorDetails('${scan.email}')">
+                    <div class="operator-cell">
+                        <div class="operator-name">${scan.nom}</div>
+                    </div>
+                    <div class="operator-cell">
+                        <div class="operator-email">${scan.email}</div>
+                    </div>
+                    <div class="operator-cell">
+                        <div>N/A</div>
+                    </div>
+                    <div class="operator-cell">
+                        <div class="neurotype">Supra Scan</div>
+                    </div>
+                    <div class="operator-cell">
+                        <div>Neuro-Architecte</div>
+                    </div>
+                    <div class="operator-cell">
+                        <div>${formatDate(scan.dernierScanDate)}</div>
+                    </div>
+                    <div class="operator-cell">
+                        <div class="stat-number" style="font-size: 1.2rem;">${scan.totalScans}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateSupraStats(scans) {
+            const today = new Date().toDateString();
+            const thisWeek = new Date();
+            thisWeek.setDate(thisWeek.getDate() - 7);
+            const thisMonth = new Date();
+            thisMonth.setDate(thisMonth.getDate() - 30);
+
+            const todayCount = scans.filter(scan => 
+                scan.dernierScanDate !== 'N/A' && new Date(scan.dernierScanDate).toDateString() === today
+            ).length;
+
+            const weekCount = scans.filter(scan => 
+                scan.dernierScanDate !== 'N/A' && new Date(scan.dernierScanDate) >= thisWeek
+            ).length;
+
+            const monthCount = scans.filter(scan => 
+                scan.dernierScanDate !== 'N/A' && new Date(scan.dernierScanDate) >= thisMonth
+            ).length;
+
+            document.getElementById('supraTotalCount').textContent = scans.length;
+            document.getElementById('supraTodayCount').textContent = todayCount;
+            document.getElementById('supraWeekCount').textContent = weekCount;
+            document.getElementById('supraMonthCount').textContent = monthCount;
+        }
+
+        function filterSupraScans() {
+            const searchInput = document.getElementById('supraSearchInput');
+            const searchTerm = searchInput.value.toLowerCase();
+
+            const filtered = currentSupraScans.filter(scan => {
+                return !searchTerm || 
+                    scan.nom.toLowerCase().includes(searchTerm) ||
+                    scan.email.toLowerCase().includes(searchTerm);
+            });
+
+            displaySupraScans(filtered);
+        }
+
+        // Fonctions utilitaires
+        function getStatusClass(status) {
+            switch (status) {
+                case 'Critique': return 'critique';
+                case 'À Surveiller': return 'surveiller';
+                case 'Stable': return 'stable';
+                default: return 'stable';
+            }
+        }
+
+        function getStatusIcon(status) {
+            switch (status) {
+                case 'Critique': return '🔴';
+                case 'À Surveiller': return '🟡';
+                case 'Stable': return '🟢';
+                default: return '⚪';
+            }
+        }
+
+        function getScoreColor(score) {
+            if (score < 30) return '#00ff88';
+            if (score < 50) return '#ffaa00';
+            return '#ff4444';
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+    </script>
+</body>
+</html>
+
